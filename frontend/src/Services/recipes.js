@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = `${process.env.REACT_APP_BACKEND_URL || ''}/api/recipes`;
+const baseUrl = `https://recipesharing-9sg4.onrender.com/api/recipes`;
 const getAll = () => {
     const request = axios.get(baseUrl);
     return request.then((response) => response.data);
