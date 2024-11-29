@@ -1,0 +1,11 @@
+{
+  "name": "recipesharing",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "docker compose -f docker-compose.yml up -d",
+    "dev:attach": "docker compose -f docker-compose.yml up",
+    "dev:stop": "docker compose -f docker-compose.yml stop",
+    "dev:down": "docker compose -f docker-compose.yml down -v --rmi local"
+  }
+}
