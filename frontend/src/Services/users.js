@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = '/api/auth';
+const baseUrl = `${process.env.REACT_APP_BACKEND_URL || ''}/api/auth`;
 
 const register = (username, email, password, passwordConfirmation) => {
     return axios

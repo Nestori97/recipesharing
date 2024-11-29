@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = '/api/recipes';
+const baseUrl = `${process.env.REACT_APP_BACKEND_URL || ''}/api/recipes`;
 const getAll = () => {
     const request = axios.get(baseUrl);
     return request.then((response) => response.data);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = '/api/tags';
+const baseUrl = `${process.env.REACT_APP_BACKEND_URL || ''}/api/tags`;
 const getAllTags = () => {
     const request = axios.get(`${baseUrl}`);
     return request.then((response) => response.data);
