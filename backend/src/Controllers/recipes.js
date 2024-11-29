@@ -3,9 +3,15 @@ const pg = require('pg');
 const { getUserFromToken } = require('../Utils/auth');
 const router = require('express').Router();
 const { Pool, Client } = pg;
+const DATABASE_URL = process.env.DATABASE_URL;
 
+// Ensure DATABASE_URL is set
+if (!DATABASE_URL) {
+    console.error("Error: DATABASE_URL is not set in environment variables.");
+    process.exit(1);
+}
 router.get('/', async (request, response) => {
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     const recipes = await client.query('SELECT * FROM recipe');
     await client.end();
@@ -16,7 +22,7 @@ router.get('/user', async (request, response) => {
     if (!user) {
         return response.status(401).json({ error: 'Authentication failed' });
     }
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         const queryText = `
@@ -37,7 +43,7 @@ router.get('/user/favorites', async (request, response) => {
     if (!user) {
         return response.status(401).json({ error: 'Authentication failed' });
     }
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         const queryText = `
@@ -65,7 +71,7 @@ router.get('/user/favorite/:id', async (request, response) => {
         return response.status(401).json({ error: 'Authentication failed' });
     }
     const recipe_id = request.params.id;
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         const queryText = `
@@ -87,7 +93,7 @@ router.post('/user/favorite/:id', async (request, response) => {
         return response.status(401).json({ error: 'Authentication failed' });
     }
     const recipe_id = request.params.id;
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         const queryText = `
@@ -110,7 +116,7 @@ router.delete('/user/favorite/:id', async (request, response) => {
         return response.status(401).json({ error: 'Authentication failed' });
     }
     const recipe_id = request.params.id;
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         const queryText = `
@@ -128,7 +134,7 @@ router.delete('/user/favorite/:id', async (request, response) => {
     }
 });
 router.get('/:id', async (request, response) => {
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     const id = request.params.id;
     await client.connect();
     const queryText = 'SELECT * FROM recipe WHERE id = $1';
@@ -142,7 +148,7 @@ router.post('/', async (request, response) => {
         return response.status(401).json({ error: 'Authentication failed' });
     }
 
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         const { title, description, ingredients, instructions, image } =
@@ -171,7 +177,7 @@ router.post('/', async (request, response) => {
     }
 });
 router.get('/:id/comments', async (request, response) => {
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     const id = request.params.id;
     await client.connect();
     const queryText = 'SELECT * FROM comments WHERE recipe_id = $1';

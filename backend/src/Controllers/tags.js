@@ -1,8 +1,15 @@
 const { request, response } = require('express');
 const { Client } = require('pg');
 const router = require('express').Router();
+const DATABASE_URL = process.env.DATABASE_URL;
+
+// Ensure DATABASE_URL is set
+if (!DATABASE_URL) {
+    console.error("Error: DATABASE_URL is not set in environment variables.");
+    process.exit(1);
+}
 router.get('/', async (request, response) => {
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     const tags = await client.query(
         `
@@ -26,7 +33,7 @@ router.get('/', async (request, response) => {
 
 router.get('/:tag', async (request, response) => {
     const tag = request.params.tag;
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         //kolmivaiheínen tietokantakysely
@@ -64,7 +71,7 @@ router.get('/:tag', async (request, response) => {
 router.post('/:tag/:id', async (request, response) => {
     const tag_id = request.params.tag;
     const recipe_id = request.params.id;
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     await client.connect();
     try {
         const queryText = `
@@ -83,7 +90,7 @@ router.post('/:tag/:id', async (request, response) => {
 });
 router.get('/recipe/:id', async (request, response) => {
     const recipe_id = request.params.id;
-    const client = new Client();
+    const client = new Client({ connectionString: DATABASE_URL })
     try {
         await client.connect();
         const queryText1 = `SELECT tag_id FROM RecipeTags WHERE recipe_id = $1`;

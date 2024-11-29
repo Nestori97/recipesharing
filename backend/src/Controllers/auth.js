@@ -7,6 +7,13 @@ const pg = require('pg');
 const { Client } = pg;
 
 router.use(urlencoded({ extended: true }));
+const DATABASE_URL = process.env.DATABASE_URL;
+
+// Ensure DATABASE_URL is set
+if (!DATABASE_URL) {
+    console.error("Error: DATABASE_URL is not set in environment variables.");
+    process.exit(1);
+}
 
 router.post(
     '/register',
@@ -25,7 +32,7 @@ router.post(
         const data = matchedData(request);
         const hash = await argon2.hash(data.password);
 
-        const client = new Client();
+        const client = new Client({ connectionString: DATABASE_URL })
         await client.connect();
         try {
             await client.query(
@@ -55,7 +62,7 @@ router.post(
         }
         const data = matchedData(request);
 
-        const client = new Client();
+        const client = new Client({ connectionString: DATABASE_URL })
         await client.connect();
         try {
             const dbRes = await client.query(
